@@ -41,6 +41,11 @@ public class LedController {
 
         if (btn_.equals("open")) {
             System.out.println("OPEN!!!");
+            if(pin == null) {
+                GpioController gpio = GpioFactory.getInstance();
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
+            }
+            pin.toggle();
         }
         if (btn_.equals("close")) {
                 System.out.println("CLOSE !!!");
