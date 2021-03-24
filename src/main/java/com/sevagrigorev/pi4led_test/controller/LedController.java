@@ -53,7 +53,7 @@ public class LedController {
                 GpioController gpio = GpioFactory.getInstance();
                 pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.LOW);
             }
-            pin.low();
+            pin.toggle();
             }
         return "motor";
     }
