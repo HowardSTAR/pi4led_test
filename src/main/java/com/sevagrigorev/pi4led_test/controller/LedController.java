@@ -51,9 +51,9 @@ public class LedController {
                 System.out.println("CLOSE !!!");
             if(pin != null) {
                 GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.getState(0));
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
             }
-            pin.toggle();
+            pin.low();
             }
         return "motor";
     }
