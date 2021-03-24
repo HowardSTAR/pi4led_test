@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>HELLO</title>
@@ -7,7 +7,9 @@
 <body>
     <h2>HELLO template</h2>
 
-    <button>Open</button>
+    <form action="#" th:action="@{/motor.html}">
+    <button type="button" name="action" th:value="open" th:text="OPEN"></button>
+    </form>
 
 </body>
 </html>

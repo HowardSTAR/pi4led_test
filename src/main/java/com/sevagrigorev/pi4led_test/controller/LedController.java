@@ -2,8 +2,8 @@ package com.sevagrigorev.pi4led_test.controller;
 
 import com.pi4j.io.gpio.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 //@RestController
 @Controller
@@ -24,6 +24,29 @@ public class LedController {
         }
         pin.toggle();
 
-        return "OK";
+        return "ok";
     }
+
+    @GetMapping("/motor")
+    public String motor1() {
+        System.out.println("GET");
+        return "motor";
+    }
+
+    @PostMapping("/motor")
+    public String motor2(@RequestParam String btn_) {
+//    public String make2() {
+//        String action = "open";
+        System.out.println("action = " + btn_);
+
+        if (btn_.equals("open")) {
+            System.out.println("OPEN!!!");
+        }
+        if (btn_.equals("close")) {
+                System.out.println("CLOSE !!!");
+            }
+        return "motor";
+    }
+
+
 }
