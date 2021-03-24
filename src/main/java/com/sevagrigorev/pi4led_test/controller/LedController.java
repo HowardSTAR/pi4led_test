@@ -51,7 +51,7 @@ public class LedController {
                 System.out.println("CLOSE !!!");
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.LOW);
             }
             pin.low();
             }
