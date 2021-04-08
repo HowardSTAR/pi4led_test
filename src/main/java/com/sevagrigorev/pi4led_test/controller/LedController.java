@@ -27,14 +27,8 @@ public class LedController {
         return "ok";
     }
 
-    @GetMapping("/motor")
-    public String motor1() {
-        System.out.println("GET");
-        return "motor";
-    }
-
     @PostMapping("/motor")
-    public String motor2(@RequestParam String btn_) {
+    public String motor(@RequestParam String btn_) {
 //    public String make2() {
 //        String action = "open";
         System.out.println("action = " + btn_);
