@@ -12,7 +12,7 @@
     <artifactId>pi4led_test</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>pi4led_test</name>
-    <description>Tesr project for Spring Boot and pi4</description>
+    <description>Test project for Spring Boot and pi4</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>

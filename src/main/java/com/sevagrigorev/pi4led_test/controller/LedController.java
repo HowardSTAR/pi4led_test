@@ -3,7 +3,6 @@ package com.sevagrigorev.pi4led_test.controller;
 import com.pi4j.io.gpio.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 //@RestController
 @Controller
@@ -12,7 +11,7 @@ public class LedController {
 
     @RequestMapping("/")
     public String hello(){
-        return "hello";
+        return "index";
     }
 
     @RequestMapping("/light")
@@ -27,17 +26,22 @@ public class LedController {
         return "ok";
     }
 
+    @GetMapping("/motor")
+    public String motor() {
+        System.out.println("GET");
+        return "motor";
+    }
+
     @PostMapping("/motor")
     public String motor(@RequestParam String btn_) {
-//    public String make2() {
-//        String action = "open";
+
         System.out.println("action = " + btn_);
 
         if (btn_.equals("open")) {
             System.out.println("OPEN!!!");
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, "MyLED", PinState.LOW); //GPIO_29
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, "MyMOTOR", PinState.HIGH); //GPIO_29
             }
             pin.toggle();
         }
@@ -45,7 +49,7 @@ public class LedController {
                 System.out.println("CLOSE !!!");
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, "MyLED", PinState.LOW);
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, "MyMOTOR", PinState.LOW);
             }
             pin.toggle();
             }
