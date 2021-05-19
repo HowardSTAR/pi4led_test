@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 //@RestController
 @Controller
 public class LedController {
-    private static GpioPinDigitalOutput pin;
+    public static GpioPinDigitalOutput pin;
 
     @RequestMapping("/")
     public String hello(){
@@ -42,7 +42,11 @@ public class LedController {
             System.out.println("OPEN!!!");
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13, "MyMOTOR", PinState.HIGH); //GPIO_29 && 23
+                GpioPinPwmOutput pwm = gpio.provisionPwmOutputPin(RaspiPin.GPIO_13); //GPIO_29 && 23
+
+                pwm.setPwmRange(100);
+
+                pwm.setPwm(100);
             }
             pin.toggle();
         }
@@ -50,7 +54,7 @@ public class LedController {
                 System.out.println("CLOSE !!!");
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13, "MyMOTOR", PinState.LOW);
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13, "MyLED", PinState.LOW);
             }
             pin.toggle();
             }
