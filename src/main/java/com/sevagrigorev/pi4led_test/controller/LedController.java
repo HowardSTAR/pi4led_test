@@ -1,6 +1,7 @@
 package com.sevagrigorev.pi4led_test.controller;
 
 import com.pi4j.io.gpio.*;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +42,7 @@ public class LedController {
             System.out.println("OPEN!!!");
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, "MyMOTOR", PinState.HIGH); //GPIO_29
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_19, "MyMOTOR", PinState.HIGH); //GPIO_29 && 23
             }
             pin.toggle();
         }
@@ -49,7 +50,7 @@ public class LedController {
                 System.out.println("CLOSE !!!");
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, "MyMOTOR", PinState.LOW);
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_19, "MyMOTOR", PinState.LOW);
             }
             pin.toggle();
             }
