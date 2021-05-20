@@ -6,7 +6,6 @@ import com.pi4j.platform.Platform;
 import com.pi4j.platform.PlatformManager;
 import com.pi4j.platform.PlatformAlreadyAssignedException;
 
-import com.pi4j.util.CommandArgumentParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,49 +38,23 @@ public class LedController {
     }
 
     @PostMapping("/motor")
-    public String motor(@RequestParam String btn_, String[] args) throws InterruptedException {
+    public String motor(@RequestParam String btn_) throws PlatformAlreadyAssignedException {
 
-//        PlatformManager.setPlatform(Platform.RASPBERRYPI);
+        PlatformManager.setPlatform(Platform.RASPBERRYPI);
 
         System.out.println("action = " + btn_);
 
         if (btn_.equals("open")) {
             System.out.println("OPEN!!!");
-//            if(pin == null) {
-//                GpioController gpio = GpioFactory.getInstance();
-//                GpioPinPwmOutput pwm = gpio.provisionPwmOutputPin(RaspiPin.GPIO_13); //GPIO_29 && 23
-//
-//                pwm.setPwmRange(100);
-//
-//                pwm.setPwm(100);
-//            }
-//            pin.toggle();
-            final GpioController gpio = GpioFactory.getInstance();
+            if(pin == null) {
+                GpioController gpio = GpioFactory.getInstance();
+                GpioPinPwmOutput pwm = gpio.provisionPwmOutputPin(RaspiPin.GPIO_13); //GPIO_29 && 23
 
-            Pin pin = CommandArgumentParser.getPin(
-                    RaspiPin.class,
-                    RaspiPin.GPIO_00,
-                    args);
-            GpioPinPwmOutput pwm = gpio.provisionSoftPwmOutputPin(pin);
-            pwm.setPwmRange(100);
+                pwm.setPwmRange(100);
 
-            int sleep = 1000;
-            for(int i = 0 ;i<10;i++){
-                pwm.setPwm(25);
-                System.out.println("PWM rate is: " + pwm.getPwm());
-                Thread.sleep(sleep);
-
-                pwm.setPwm(15);
-                System.out.println("PWM rate is: " + pwm.getPwm());
-                Thread.sleep(sleep);
-
-                pwm.setPwm(6);
-                System.out.println("PWM rate is: " + pwm.getPwm());
-                Thread.sleep(sleep);
+                pwm.setPwm(100);
             }
-            gpio.shutdown();
-            System.out.println("pwm end");
-
+            pin.toggle();
         }
         if (btn_.equals("close")) {
                 System.out.println("CLOSE !!!");
