@@ -38,32 +38,65 @@ public class LedController {
     }
 
     @PostMapping("/motor")
-    public String motor(@RequestParam String btn_) throws PlatformAlreadyAssignedException {
+    public String motor(@RequestParam String btn_) { //throws PlatformAlreadyAssignedException {
 
-        PlatformManager.setPlatform(Platform.RASPBERRYPI);
+        try{
+            Runtime runTime = Runtime.getRuntime();
+            runTime.exec("gpio mode 1 pwm");
+            runTime.exec("gpio pwm-ms");
+            runTime.exec("gpio pwm 192");
+            runTime.exec("gpio pwm 2000");
+            runTime.exec("gpio pwm 1 152"); //centr
 
-        System.out.println("action = " + btn_);
+            Thread.sleep(5000);
+            runTime.exec("gpio pwm 1 100"); // turn right
+            Thread.sleep(300);
+            runTime.exec("gpio pwm 1 200"); // left
 
-        if (btn_.equals("open")) {
-            System.out.println("OPEN!!!");
-            if(pin == null) {
-                GpioController gpio = GpioFactory.getInstance();
-                GpioPinPwmOutput pwm = gpio.provisionPwmOutputPin(RaspiPin.GPIO_13); //GPIO_29 && 23
-
-                pwm.setPwmRange(100);
-
-                pwm.setPwm(100);
+            int i = 100;
+            boolean turningLeft = true;
+            while (true){
+                runTime.exec("gpio pwm 1 " + i);
+                Thread.sleep(10);
+                if (turningLeft) {
+                    i++;
+                } else {
+                    i--;
+                }
+                if (i > 200) {
+                    turningLeft = false;
+                }
+                if (i < 100) {
+                    turningLeft = true;
+                }
             }
-            pin.toggle();
+        } catch (Exception e) {
+            System.out.println("Exception occured: " + e.getMessage());
         }
-        if (btn_.equals("close")) {
-                System.out.println("CLOSE !!!");
-            if(pin == null) {
-                GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13, "MyLED", PinState.LOW);
-            }
-            pin.toggle();
-            }
+//        PlatformManager.setPlatform(Platform.RASPBERRYPI);
+//
+//        System.out.println("action = " + btn_);
+//
+//        if (btn_.equals("open")) {
+//            System.out.println("OPEN!!!");
+//            if(pin == null) {
+//                GpioController gpio = GpioFactory.getInstance();
+//                GpioPinPwmOutput pwm = gpio.provisionPwmOutputPin(RaspiPin.GPIO_13); //GPIO_29 && 23
+//
+//                pwm.setPwmRange(100);
+//
+//                pwm.setPwm(100);
+//            }
+//            pin.toggle();
+//        }
+//        if (btn_.equals("close")) {
+//                System.out.println("CLOSE !!!");
+//            if(pin == null) {
+//                GpioController gpio = GpioFactory.getInstance();
+//                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13, "MyLED", PinState.LOW);
+//            }
+//            pin.toggle();
+//            }
         return "motor";
     }
 
