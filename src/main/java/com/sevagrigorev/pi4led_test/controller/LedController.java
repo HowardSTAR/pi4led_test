@@ -48,7 +48,7 @@ public class LedController {
             System.out.println("OPEN!!!");
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
-                GpioPinPwmOutput pwm = gpio.provisionPwmOutputPin(RaspiPin.GPIO_13); //GPIO_29 && 23
+                GpioPinPwmOutput pwm = gpio.provisionPwmOutputPin(RaspiPin.GPIO_23); //GPIO_29 && 23
 
                 pwm.setPwmRange(100);
 
