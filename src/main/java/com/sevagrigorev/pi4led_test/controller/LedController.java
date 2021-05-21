@@ -9,10 +9,13 @@ import com.pi4j.platform.PlatformAlreadyAssignedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 //@RestController
 @Controller
 public class LedController {
     public static GpioPinDigitalOutput pin;
+    public static GpioPinPwmOutput pwm;
 
     @RequestMapping("/")
     public String hello(){
@@ -38,23 +41,25 @@ public class LedController {
     }
 
     @PostMapping("/motor")
-    public String motor(@RequestParam String btn_) throws PlatformAlreadyAssignedException {
-
-        PlatformManager.setPlatform(Platform.RASPBERRYPI);
+    public String motor(@RequestParam String btn_) throws IOException {
 
         System.out.println("action = " + btn_);
 
         if (btn_.equals("open")) {
             System.out.println("OPEN!!!");
-            if(pin == null) {
-                GpioController gpio = GpioFactory.getInstance();
-                GpioPinPwmOutput pwm = gpio.provisionPwmOutputPin(RaspiPin.GPIO_23); //GPIO_29 && 23
 
-                pwm.setPwmRange(100);
+                Process process = Runtime.getRuntime().exec("");
 
-                pwm.setPwm(100);
-            }
-            pin.toggle();
+//            if(pwm == null) {
+//                GpioController gpio = GpioFactory.getInstance();
+//                pwm = gpio.provisionPwmOutputPin(RaspiPin.GPIO_23); //GPIO_29 && 23
+//
+//                pwm.setPwmRange(100);
+//
+//
+//            }
+//            pwm.setPwm(100);
+
         }
         if (btn_.equals("close")) {
                 System.out.println("CLOSE !!!");
