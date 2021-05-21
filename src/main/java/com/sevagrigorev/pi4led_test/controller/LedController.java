@@ -9,7 +9,9 @@ import com.pi4j.platform.PlatformAlreadyAssignedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 //@RestController
 @Controller
@@ -43,12 +45,28 @@ public class LedController {
     @PostMapping("/motor")
     public String motor(@RequestParam String btn_) throws IOException {
 
+
         System.out.println("action = " + btn_);
 
         if (btn_.equals("open")) {
             System.out.println("OPEN!!!");
 
-                Process process = Runtime.getRuntime().exec("");
+            String pyScript = "";
+            String[] cmd = new String[2];
+            cmd[0] = "python";
+            cmd[1] = pyScript;
+
+            Runtime rt = Runtime.getRuntime();
+            Process pr = rt.exec(cmd);
+
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            String line = "";
+            while ((line = bfr.readLine()) != null){
+                System.out.println(line);
+            }
+
+
+//                Process process = Runtime.getRuntime().exec("");
 
 //            if(pwm == null) {
 //                GpioController gpio = GpioFactory.getInstance();
