@@ -49,7 +49,7 @@ public class LedController {
             Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
 
             //ДАТЧИК ТЕМПЕРАТУРЫ
-            DHTxx dht11 = new DHT11(OrangePiPin.GPIO_07);
+            DHTxx dht11 = new DHT11(RaspiPin.GPIO_07);
             System.out.println(dht11);
             try {
                 dht11.init();
