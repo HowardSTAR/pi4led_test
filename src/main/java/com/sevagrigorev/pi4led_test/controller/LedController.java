@@ -51,41 +51,34 @@ public class LedController {
         if (btn_.equals("open")) {
             System.out.println("OPEN!!!");
 
-            String pyScript = "";
-            String[] cmd = new String[2];
-            cmd[0] = "python";
-            cmd[1] = pyScript;
+            String pyOpen = "";
+            String[] cmdOpen = new String[2];
+            cmdOpen[0] = "python";
+            cmdOpen[1] = pyOpen;
 
             Runtime rt = Runtime.getRuntime();
-            Process pr = rt.exec(cmd);
+            Process pr = rt.exec(cmdOpen);
 
             BufferedReader bfr = new BufferedReader(new InputStreamReader(pr.getInputStream()));
             String line = "";
             while ((line = bfr.readLine()) != null){
                 System.out.println(line);
             }
-
-
-//                Process process = Runtime.getRuntime().exec("");
-
-//            if(pwm == null) {
-//                GpioController gpio = GpioFactory.getInstance();
-//                pwm = gpio.provisionPwmOutputPin(RaspiPin.GPIO_23); //GPIO_29 && 23
-//
-//                pwm.setPwmRange(100);
-//
-//
-//            }
-//            pwm.setPwm(100);
-
         }
         if (btn_.equals("close")) {
-                System.out.println("CLOSE !!!");
-            if(pin == null) {
-                GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13, "MyLED", PinState.LOW);
+            String pyClose = "";
+            String[] cmdClose = new String[2];
+            cmdClose[0] = "python";
+            cmdClose[1] = pyClose;
+
+            Runtime rt = Runtime.getRuntime();
+            Process pr = rt.exec(cmdClose);
+
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            String line = "";
+            while ((line = bfr.readLine()) != null){
+                System.out.println(line);
             }
-            pin.toggle();
             }
         return "motor";
     }
