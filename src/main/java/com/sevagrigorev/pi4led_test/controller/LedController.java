@@ -2,22 +2,18 @@ package com.sevagrigorev.pi4led_test.controller;
 
 import com.pi4j.io.gpio.*;
 
-import com.pi4j.platform.Platform;
-import com.pi4j.platform.PlatformManager;
-import com.pi4j.platform.PlatformAlreadyAssignedException;
-
+import com.sevagrigorev.pi4led_test.model.DHT11;
+import com.sevagrigorev.pi4led_test.model.DHTxx;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
-//@RestController
 @Controller
 public class LedController {
     public static GpioPinDigitalOutput pin;
-    public static GpioPinPwmOutput pwm;
+
+    private static final int DHT_WAIT_INTERVAL = 2000;
 
     @RequestMapping("/")
     public String hello(){
@@ -51,6 +47,25 @@ public class LedController {
             System.out.println("OPEN!!!");
 
             Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
+
+            //ДАТЧИК ТЕМПЕРАТУРЫ
+            DHTxx dht11 = new DHT11(OrangePiPin.GPIO_07);
+            System.out.println(dht11);
+            try {
+                dht11.init();
+                for (int i = 0; i < 10; i++) {
+                    try {
+                        System.out.println(dht11.getData());
+                        Thread.sleep(DHT_WAIT_INTERVAL);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            //ДАТЧИК ТЕМПЕРАТУРЫ
+
         }
         if (btn_.equals("close")) {
             System.out.println("CLOSE!!!");
