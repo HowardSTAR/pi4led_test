@@ -50,38 +50,12 @@ public class LedController {
         if (btn_.equals("open")) {
             System.out.println("OPEN!!!");
 
-            Process pOpen = Runtime.getRuntime().exec("python ");
-//            String pyOpen = "";
-//            String[] cmdOpen = new String[2];
-//            cmdOpen[0] = "python";
-//            cmdOpen[1] = pyOpen;
-//
-//            Runtime rt = Runtime.getRuntime();
-//            Process pr = rt.exec(cmdOpen);
-//
-//            BufferedReader bfr = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-//            String line = "";
-//            while ((line = bfr.readLine()) != null){
-//                System.out.println(line);
-//            }
+            Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
         }
         if (btn_.equals("close")) {
             System.out.println("CLOSE!!!");
 
-            Process pClose = Runtime.getRuntime().exec("python ");
-//            String pyClose = "";
-//            String[] cmdClose = new String[2];
-//            cmdClose[0] = "python";
-//            cmdClose[1] = pyClose;
-//
-//            Runtime rt = Runtime.getRuntime();
-//            Process pr = rt.exec(cmdClose);
-//
-//            BufferedReader bfr = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-//            String line = "";
-//            while ((line = bfr.readLine()) != null){
-//                System.out.println(line);
-//            }
+            Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
             }
         return "motor";
     }
