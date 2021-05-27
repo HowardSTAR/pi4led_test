@@ -2,35 +2,26 @@ package com.sevagrigorev.pi4led_test.controller;
 
 import com.pi4j.io.gpio.*;
 
-import com.sevagrigorev.pi4led_test.model.DHL;
 import com.sevagrigorev.pi4led_test.model.DHT11;
 import com.sevagrigorev.pi4led_test.model.DHTxx;
 import com.sevagrigorev.pi4led_test.service.DhlService;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class LedController implements ApplicationContextAware {
     public static GpioPinDigitalOutput pin;
 
     private ApplicationContext context;
-//
-//    @PostMapping("curl -X POST localhost:9898/shutdownContext")
-////    @PostMapping("curl -X POST localhost:port/shutdownContext")
-//    public void shutdownContext() {
-//        ((ConfigurableApplicationContext) context).close();
-//    }
-//
+
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
         this.context = ctx;
@@ -67,32 +58,32 @@ public class LedController implements ApplicationContextAware {
     public String motor(Model model) {
             System.out.println("GET");
 
-            //ДАТЧИК ТЕМПЕРАТУРЫ
-//            DHTxx dht11 = new DHT11(RaspiPin.GPIO_07);
-//            System.out.println("dht11 !!!");
-//            try {
-//                dht11.init();
-//                for (int i = 0; i < 10; i++) {
-//                    try {
-//                        System.out.println(dht11.getData());
-//                        Thread.sleep(DHT_WAIT_INTERVAL);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            } catch (Exception e1) {
-//                e1.printStackTrace();
-//            }
-            //ДАТЧИК ТЕМПЕРАТУРЫ
+//            ДАТЧИК ТЕМПЕРАТУРЫ
+            DHTxx dht11 = new DHT11(RaspiPin.GPIO_07);
+            System.out.println("dht11 !!!");
+            try {
+                dht11.init();
+                for (int i = 0; i < 10; i++) {
+                    try {
+                        System.out.println(dht11.getData());
+                        Thread.sleep(DHT_WAIT_INTERVAL);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+//            ДАТЧИК ТЕМПЕРАТУРЫ
 
-//
-//
-//        try {
-//            model.addAttribute("temperature", dht11.getData().getTemperature());
-//            model.addAttribute("humidity", dht11.getData().getHumidity());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
+
+        try {
+            model.addAttribute("temperature", dht11.getData().getTemperature());
+            model.addAttribute("humidity", dht11.getData().getHumidity());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
             return "motor";
