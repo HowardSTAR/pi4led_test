@@ -1,5 +1,7 @@
+<!--@model List<DHL></DHL>-->
+
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:jsp="http://java.sun.com/JSP/Page">
 <head>
     <meta charset="UTF-8">
     <title>MOTOR</title>
@@ -10,6 +12,29 @@
 <form action="#" data-th-action="@{/motor}" method="post">
     <button type="submit" name="btn_" value="open">OPEN</button>
     <button type="submit" name="btn_" value="close">CLOSE</button>
+    <a href="/graf" >GRAF</a>
+
+
 </form>
+
+<form action="dhl" method="get">
+    <p th:text="'Температура: ' + ${temperature}"></p>
+    <p th:text="'Влажность: ' + ${humidity}"></p>
+
+
+</form>
+
+<div class="row">
+    <ul class="col s12 collection" data-bind="foreach: dhlList">
+        <li class="collection-item">
+            <span data-bind="text: ${da.date}"></span>
+        </li>
+    </ul>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--    Код JavaScript-->
+<!--</script>-->
+
 </body>
 </html>
