@@ -3,10 +3,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-<!--&lt;!&ndash;    Вставка &ndash;&gt;-->
-<!--&lt;!&ndash;    <groupId>springboot.topjava.ru</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;    <artifactId>SpringBootRestService</artifactId>&ndash;&gt;-->
-<!--    <version>1.0</version>-->
     <packaging>jar</packaging>
 
     <parent>
@@ -23,11 +19,6 @@
 
     <properties>
         <java.version>1.8</java.version>
-
-<!--&lt;!&ndash;        Вставка &ndash;&gt;-->
-<!--        <maven.compiler.source>1.8</maven.compiler.source>-->
-<!--        <maven.compiler.target>1.8</maven.compiler.target>-->
-
     </properties>
 
     <dependencies>
@@ -42,16 +33,16 @@
 
 <!--        БД -->
 <!--        !!!!!-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.2.18</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.postgresql</groupId>-->
+<!--            <artifactId>postgresql</artifactId>-->
+<!--            <version>42.2.18</version>-->
+<!--        </dependency>-->
 
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
@@ -61,11 +52,11 @@
 
         <!-- https://mvnrepository.com/artifact/jstl/jstl -->
 <!--        taglib in jsp   -->
-        <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>jstl</groupId>-->
+<!--            <artifactId>jstl</artifactId>-->
+<!--            <version>1.2</version>-->
+<!--        </dependency>-->
 
 
         <!--        pi4j    -->
