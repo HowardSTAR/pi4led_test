@@ -1,7 +1,6 @@
-<!--@model List<DHL></DHL>-->
-
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:jsp="http://java.sun.com/JSP/Page">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:jsp="http://java.sun.com/JSP/Page"
+      xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>MOTOR</title>
@@ -9,32 +8,53 @@
 <body>
 <h2>MOTOR !!!</h2>
 
+<!-- Часы-->
+<script language="javascript" type="text/javascript">
+var d = new Date();
+
+var day=new Array("Воскресенье","Понедельник","Вторник",
+    "Среда","Четверг","Пятница","Суббота");
+
+var month=new Array("января","февраля","марта","апреля","мая","июня",
+    "июля","августа","сентября","октября","ноября","декабря");
+
+document.write(day[d.getDay()]+" " +d.getDate()+ " " + month[d.getMonth()]
+    + " " + d.getFullYear() + " г.");
+</script>
+
+<span id="clock" style="color:black;">
+</span>
+
+<script>
+    setInterval(function () {
+        var now = new Date();
+        var clock = document.getElementById("clock");
+        clock.innerHTML = now.toLocaleTimeString();
+    }, 1000);
+</script>
+
+<div id="current-date"></div>
+</br>
+
+
 <form action="#" data-th-action="@{/motor}" method="post">
-    <button type="submit" name="btn_" value="open">OPEN</button>
-    <button type="submit" name="btn_" value="close">CLOSE</button>
-    <a href="/graf" >GRAF</a>
-
-
+    <button type="submit" name="btn_" value="open">ОТКРЫТЬ</button>
+    <button type="submit" name="btn_" value="close">ЗАКРЫТЬ</button>
+<!--    <button type="submit" name="btn_" href="/graf">ГРАФИКИ</button>-->
+    <a href="/graf">ГРАФИКИ</a>
 </form>
 
-<form action="dhl" method="get">
-    <p th:text="'Температура: ' + ${temperature}"></p>
-    <p th:text="'Влажность: ' + ${humidity}"></p>
 
-
+<form method="get">
+    <p th:text="'Сейчас температура: ' + ${temperature}"></p>
+    <p th:text="'Сейчас влажность: ' + ${humidity}"></p>
+    <br>
+    <input type="text" name="temper" placeholder="Ввод температуры "/>
+    <input type="submit" value="Ввод авто-температуры"/>
+    <br>
+    <p th:text="'Выставлена температура для автоматического открывания/закрывания: ' + ${auto} +' град.C'"></p>
 </form>
 
-<div class="row">
-    <ul class="col s12 collection" data-bind="foreach: dhlList">
-        <li class="collection-item">
-            <span data-bind="text: ${da.date}"></span>
-        </li>
-    </ul>
-</div>
-
-<!--<script type="text/javascript">-->
-<!--    Код JavaScript-->
-<!--</script>-->
 
 </body>
 </html>
