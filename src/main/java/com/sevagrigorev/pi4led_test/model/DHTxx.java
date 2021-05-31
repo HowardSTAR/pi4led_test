@@ -9,5 +9,5 @@ public interface DHTxx {
 
     public void setPin(Pin pin);
 
-    public DHL getData() throws Exception;
+    public DHT getData() throws Exception;
 }

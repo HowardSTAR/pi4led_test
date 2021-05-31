@@ -12,7 +12,7 @@ public class DHT11 extends DHTxxBase {
     }
 
     @Override
-    public DHL getData() throws Exception {
+    public DHT getData() throws Exception {
         int atempts = 0;
         while (true) {
             try {
@@ -43,7 +43,7 @@ public class DHT11 extends DHTxxBase {
                         temperature += data[3] / 100.0;
                     }
                 }
-                return new DHL(temperature, humidity);
+                return new DHT(temperature, humidity);
             } catch (Exception e) {
                 atempts++;
                 if (atempts <= 3) {
