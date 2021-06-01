@@ -3,19 +3,26 @@ package com.sevagrigorev.pi4led_test.controller;
 import com.pi4j.io.gpio.*;
 
 import com.sevagrigorev.pi4led_test.UtilAutoTemperature;
+
 import com.sevagrigorev.pi4led_test.model.DHT;
 import com.sevagrigorev.pi4led_test.model.DHT11;
 import com.sevagrigorev.pi4led_test.model.DHTxx;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import org.springframework.beans.BeansException;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+
 import org.springframework.scheduling.annotation.Scheduled;
+
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,24 +35,35 @@ public class LedController implements ApplicationContextAware {
 
     private ApplicationContext context;
 
+    private boolean isAuto;
+
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
         this.context = ctx;
         UtilAutoTemperature.setAutoTemperature(25);
+        isAuto = false;
     }
 
 
     @GetMapping("/motor")
-    public String motor(Model model, @RequestParam(required = false) String temper) {
+    public String motor(Model model, @RequestParam(required = false) Integer temper) {
         if (temper != null) {
-            UtilAutoTemperature.setAutoTemperature(Integer.parseInt(temper));
+            UtilAutoTemperature.setAutoTemperature(temper);
+            isAuto = true;
+        } else {
+
         }
 
+        System.out.println("GET isAuto = "+isAuto);
 
         try {
             model.addAttribute("temperature", getTemperatureNow());
             model.addAttribute("humidity", getHumidityNow());
-                model.addAttribute("auto", UtilAutoTemperature.getAutoTemperature());
+            if (isAuto) {
+                model.addAttribute("auto", " автоматический, Вы выставили температуру: "+ UtilAutoTemperature.getAutoTemperature() + " °С");
+            } else {
+                model.addAttribute("auto", " ручной.");
+            }
             }catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,7 +71,13 @@ public class LedController implements ApplicationContextAware {
     }
 
     @PostMapping("/motor")
-    public String motor(@RequestParam String btn_, Model model) throws IOException {
+    public String motor(@RequestParam String btn_, Model model) throws Exception {
+
+        if (btn_ != null) {
+            isAuto = false;
+        }
+
+        System.out.println("POST isAuto = " + isAuto);
 
         if (btn_.equals("open")) {
 //            открытие в методе
@@ -66,12 +90,12 @@ public class LedController implements ApplicationContextAware {
             lightOff(false);
             Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
             }
-        try {
             model.addAttribute("temperature", getTemperatureNow());
             model.addAttribute("humidity", getHumidityNow());
-                model.addAttribute("auto", UtilAutoTemperature.getAutoTemperature());
-        }catch (Exception e) {
-            e.printStackTrace();
+        if (isAuto) {
+            model.addAttribute("auto", " автоматический, Вы выставили температуру: "+ UtilAutoTemperature.getAutoTemperature() + " °С");
+        } else {
+            model.addAttribute("auto", " ручной.");
         }
 
         return "motor";
@@ -120,7 +144,10 @@ public class LedController implements ApplicationContextAware {
     public void create() throws Exception {
         optimizeList();
         listParameter.add(getParameterFromDHL());
-        autoOpenClose((getParameterFromDHL()).getTemperature());
+
+        if (isAuto) {
+            autoOpenClose((getParameterFromDHL()).getTemperature());
+        }
     }
 
 //    Проверка listParameter на 72 значения - 3 дня
