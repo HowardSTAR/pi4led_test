@@ -31,23 +31,25 @@ public class LedController implements ApplicationContextAware {
         UtilAutoTemperature.setAutoTemperature(25);
     }
 
-    @RequestMapping("/")
-    public String hello(){
-        return "index";
-    }
+//    убрать
+//    @RequestMapping("/")
+//    public String hello(){
+//        return "index";
+//    }
 
-    @RequestMapping("/light")
-    public String light() {
-
-        System.out.println("Горит светодиод");
-//        if(pin == null) {
-//            GpioController gpio = GpioFactory.getInstance();
-//            pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
-//        }
-//        pin.toggle();
-
-        return "ok";
-    }
+    //    убрать
+//    @RequestMapping("/light")
+//    public String light() {
+//
+//        System.out.println("Горит светодиод");
+////        if(pin == null) {
+////            GpioController gpio = GpioFactory.getInstance();
+////            pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
+////        }
+////        pin.toggle();
+//
+//        return "ok";
+//    }
 
     @GetMapping("/motor")
     public String motor(Model model, @RequestParam(required = false) String temper) {
@@ -58,13 +60,16 @@ public class LedController implements ApplicationContextAware {
         }
         System.out.println("Util: "+ UtilAutoTemperature.getAutoTemperature());
 
-//        Датчик температур
-        DHT dht = getParameterFromDHL();    //  убрать
-//        DHTxx dht = getParameterFromDHL();
+//        Датчик температур последний элумент listParameter
+//        DHT dht = getParameterFromDHL();    //  убрать
+
+//        DHTxx dht = getParameterFromDHL();    //  убрать
 
         try {
-            model.addAttribute("temperature", dht.getTemperature());
-            model.addAttribute("humidity", dht.getHumidity());
+            model.addAttribute("temperature", getTemperatureNow());
+            model.addAttribute("humidity", getHumidityNow());
+//            model.addAttribute("temperature", dht.getTemperature());
+//            model.addAttribute("humidity", dht.getHumidity());
             model.addAttribute("auto", UtilAutoTemperature.getAutoTemperature());
             }catch (Exception e) {
             e.printStackTrace();
@@ -80,21 +85,25 @@ public class LedController implements ApplicationContextAware {
 
         if (btn_.equals("open")) {
             System.out.println("OPEN!!!");
-
-//            Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
+//            открытие в методе
+            open();
+            lightOff(true);
+//  убрать          Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
         }
 
         if (btn_.equals("close")) {
             System.out.println("CLOSE!!!");
-
-//            Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
+//            закрытие в методе
+            close();
+            lightOff(false);
+//   убрать         Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
             }
-//          Датчик температур
-        DHT dht = getParameterFromDHL();        // убрать
-//        DHTxx dht = getParameterFromDHL();
+//          Датчик температур последний элемент listParameter методы
+//        DHT dht = getParameterFromDHL();        // убрать
+//        DHTxx dht = getParameterFromDHL();    // убрать
         try {
-            model.addAttribute("temperature", dht.getTemperature());
-            model.addAttribute("humidity", dht.getHumidity());
+            model.addAttribute("temperature", getTemperatureNow());
+            model.addAttribute("humidity", getHumidityNow());
             model.addAttribute("auto", UtilAutoTemperature.getAutoTemperature());
 
 
@@ -111,7 +120,7 @@ public class LedController implements ApplicationContextAware {
         return "graf";
     }
 
-    //ДАТЧИК ТЕМПЕРАТУРЫ
+    //ОПРОС ДАТЧИКА ТЕМПЕРАТУРЫ
     private DHT getParameterFromDHL(){  //  убрать
 
 //    private DHTxx getParameterFromDHL(){
@@ -139,6 +148,24 @@ public class LedController implements ApplicationContextAware {
         return new DHT( Math.random()*30, Math.random()*90);     // убрать
     }
 
+//    Светодиод
+//    color - true - зеленый
+//    color - false - красный
+    private void lightOff(boolean color) {
+        System.out.println("Горит светодиод");
+        if (color) {
+            System.out.println("Зеленый");
+        } else {
+            System.out.println("Красный");
+        }
+
+//        if(pin == null) {
+//            GpioController gpio = GpioFactory.getInstance();
+//            pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
+//        }
+//        pin.toggle();
+    }
+
 //    Опрос датчика - в параллели
 //    5000 - 5 сек, 3600000 - 1 час
     @Scheduled(fixedRate = 5000)
@@ -163,10 +190,14 @@ public class LedController implements ApplicationContextAware {
         if (UtilAutoTemperature.getAutoTemperature() != null && UtilAutoTemperature.getAutoTemperature() < temperature) {
 //            open
             open();
+//            светодиод
+            lightOff(true);
         }
         if (UtilAutoTemperature.getAutoTemperature() != null && UtilAutoTemperature.getAutoTemperature() > temperature){
 //            close
             close();
+//            светодиод
+            lightOff(false);
         }
     }
 
@@ -187,5 +218,21 @@ public class LedController implements ApplicationContextAware {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    private double getTemperatureNow() {
+        if (!listParameter.equals(null)) {
+            return  listParameter.get(listParameter.size()-1).getTemperature();
+        }
+        create();
+        return  listParameter.get(listParameter.size()-1).getTemperature();
+    }
+
+    private double getHumidityNow() {
+        if (!listParameter.equals(null)) {
+            return listParameter.get(listParameter.size() - 1).getHumidity();
+        }
+        create();
+        return listParameter.get(listParameter.size() - 1).getHumidity();
     }
 }
