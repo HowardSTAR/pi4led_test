@@ -95,16 +95,15 @@ public class LedController implements ApplicationContextAware {
     }
 
     //ОПРОС ДАТЧИКА ТЕМПЕРАТУРЫ
-    private DHTxx getParameterFromDHL(){
+    private DHT getParameterFromDHL() throws Exception{
             DHTxx dht11 = new DHT11(RaspiPin.GPIO_07);
+
             System.out.println("dht11 !!!");
-            try {
-                dht11.init();
-                System.out.println(dht11.getData());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        return dht11;
+
+            dht11.init();
+            System.out.println(dht11.getData());
+
+            return new DHT(dht11.getData().getTemperature(), dht11.getData().getHumidity());
     }
 
 //    Светодиод
@@ -135,11 +134,11 @@ public class LedController implements ApplicationContextAware {
 //    Опрос датчика - в параллели
 //    5000 - 5 сек, 3600000 - 1 час
     @Scheduled(fixedRate = 5000)
-    public void create() {
+    public void create() throws Exception {
         System.out.println("THREAD ");
         optimizeList();
-        listParameter.add((DHT) getParameterFromDHL());
-        autoOpenClose(((DHT) getParameterFromDHL()).getTemperature());
+        listParameter.add(getParameterFromDHL());
+        autoOpenClose((getParameterFromDHL()).getTemperature());
         System.out.println("list: "+listParameter);
     }
 
@@ -185,7 +184,7 @@ public class LedController implements ApplicationContextAware {
         }
     }
 
-    private double getTemperatureNow() {
+    private double getTemperatureNow() throws Exception{
         if (!listParameter.equals(null)) {
             return  listParameter.get(listParameter.size()-1).getTemperature();
         }
@@ -193,7 +192,7 @@ public class LedController implements ApplicationContextAware {
         return  listParameter.get(listParameter.size()-1).getTemperature();
     }
 
-    private double getHumidityNow() {
+    private double getHumidityNow() throws Exception{
         if (!listParameter.equals(null)) {
             return listParameter.get(listParameter.size() - 1).getHumidity();
         }
