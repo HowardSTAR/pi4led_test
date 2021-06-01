@@ -63,17 +63,17 @@ public class LedController implements ApplicationContextAware {
         if (btn_.equals("open")) {
             System.out.println("OPEN!!!");
 //            открытие в методе
-            open();
+//            open();
             lightOff(true);
-//  убрать          Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
+            Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
         }
 
         if (btn_.equals("close")) {
             System.out.println("CLOSE!!!");
 //            закрытие в методе
-            close();
+//            close();
             lightOff(false);
-//   убрать         Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
+            Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
             }
         try {
             model.addAttribute("temperature", getTemperatureNow());

@@ -9,7 +9,7 @@ p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
 p.start(2.5) # Initialization
 try:
     p.ChangeDutyCycle(12)
-    time.sleep(0.5)ЫЫЫ
+    time.sleep(0.5)
 
     p.stop()
     GPIO.cleanup()
