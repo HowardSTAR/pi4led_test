@@ -6,6 +6,7 @@ import com.sevagrigorev.pi4led_test.UtilAutoTemperature;
 import com.sevagrigorev.pi4led_test.model.DHT;
 import com.sevagrigorev.pi4led_test.model.DHT11;
 import com.sevagrigorev.pi4led_test.model.DHTxx;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -27,6 +28,8 @@ public class LedController implements ApplicationContextAware {
 
     private ApplicationContext context;
 
+    private boolean isCheckAuto;
+
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
         this.context = ctx;
@@ -36,18 +39,17 @@ public class LedController implements ApplicationContextAware {
 
     @GetMapping("/motor")
     public String motor(Model model, @RequestParam(required = false) String temper) {
-            System.out.println("GET");
-        System.out.println("TEMPER: "+temper);
         if (temper != null) {
             UtilAutoTemperature.setAutoTemperature(Integer.parseInt(temper));
         }
-        System.out.println("Util: "+ UtilAutoTemperature.getAutoTemperature());
 
 
         try {
             model.addAttribute("temperature", getTemperatureNow());
             model.addAttribute("humidity", getHumidityNow());
-            model.addAttribute("auto", UtilAutoTemperature.getAutoTemperature());
+            if (isCheckAuto) {
+                model.addAttribute("auto", UtilAutoTemperature.getAutoTemperature());
+            }
             }catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,32 +57,29 @@ public class LedController implements ApplicationContextAware {
     }
 
     @PostMapping("/motor")
-    public String motor(@RequestParam String btn_, Model model) throws IOException {
+    public String motor(@RequestParam String btn_, @RequestParam String check_, Model model) throws IOException {
 
-        System.out.println("action = " + btn_);
-        System.out.println("Util: "+ UtilAutoTemperature.getAutoTemperature());
+        System.out.println("Я ТУТУТУТУТУТУТУТУ    "+check_);
+
+        System.out.println(btn_);
 
         if (btn_.equals("open")) {
-            System.out.println("OPEN!!!");
 //            открытие в методе
-//            open();
             lightOff(true);
             Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
         }
 
         if (btn_.equals("close")) {
-            System.out.println("CLOSE!!!");
 //            закрытие в методе
-//            close();
             lightOff(false);
             Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
             }
         try {
             model.addAttribute("temperature", getTemperatureNow());
             model.addAttribute("humidity", getHumidityNow());
-            model.addAttribute("auto", UtilAutoTemperature.getAutoTemperature());
-
-
+            if (isCheckAuto) {
+                model.addAttribute("auto", UtilAutoTemperature.getAutoTemperature());
+            }
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,12 +96,7 @@ public class LedController implements ApplicationContextAware {
     //ОПРОС ДАТЧИКА ТЕМПЕРАТУРЫ
     private DHT getParameterFromDHL() throws Exception{
             DHTxx dht11 = new DHT11(RaspiPin.GPIO_07);
-
-            System.out.println("dht11 !!!");
-
             dht11.init();
-            System.out.println(dht11.getData());
-
             return new DHT(dht11.getData().getTemperature(), dht11.getData().getHumidity());
     }
 
@@ -110,9 +104,8 @@ public class LedController implements ApplicationContextAware {
 //    color - true - зеленый
 //    color - false - красный
     private void lightOff(boolean color) {
-        System.out.println("Горит светодиод");
         if (color) {
-            System.out.println("Зеленый");
+            System.out.println("Зеленый\n");
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
                 pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.HIGH);
@@ -120,7 +113,7 @@ public class LedController implements ApplicationContextAware {
             }
             pin.toggle();
         } else {
-            System.out.println("Красный");
+            System.out.println("Красный\n");
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
                 pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.HIGH);
@@ -135,11 +128,9 @@ public class LedController implements ApplicationContextAware {
 //    5000 - 5 сек, 3600000 - 1 час
     @Scheduled(fixedRate = 5000)
     public void create() throws Exception {
-        System.out.println("THREAD ");
         optimizeList();
         listParameter.add(getParameterFromDHL());
         autoOpenClose((getParameterFromDHL()).getTemperature());
-        System.out.println("list: "+listParameter);
     }
 
 //    Проверка listParameter на 72 значения - 3 дня
@@ -151,23 +142,21 @@ public class LedController implements ApplicationContextAware {
 
 //    Проверка для авто открывания/закрывания
     private void autoOpenClose(double temperature) {
-        if (UtilAutoTemperature.getAutoTemperature() != null && UtilAutoTemperature.getAutoTemperature() < temperature) {
-//            open
-            open();
+        if (isCheckAuto && UtilAutoTemperature.getAutoTemperature() != null && UtilAutoTemperature.getAutoTemperature() < temperature) {
+                open();
 //            светодиод
-            lightOff(true);
+                lightOff(true);
         }
-        if (UtilAutoTemperature.getAutoTemperature() != null && UtilAutoTemperature.getAutoTemperature() > temperature){
-//            close
-            close();
+        if (!isCheckAuto && UtilAutoTemperature.getAutoTemperature() != null && UtilAutoTemperature.getAutoTemperature() > temperature){
+                close();
 //            светодиод
-            lightOff(false);
+                lightOff(false);
         }
     }
 
 //    Методы открытия и закрытия
     private void open() {
-        System.out.println("AutoOpen");
+        System.out.println("AutoOpen\n");
         try {
             Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
         } catch (IOException e) {
@@ -176,7 +165,7 @@ public class LedController implements ApplicationContextAware {
     }
 
     private void close() {
-        System.out.println("AutoCLose");
+        System.out.println("AutoCLose\n");
         try {
             Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
         } catch (IOException e) {
