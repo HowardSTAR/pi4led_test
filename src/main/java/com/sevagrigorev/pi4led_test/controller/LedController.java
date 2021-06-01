@@ -31,7 +31,8 @@ public class LedController implements ApplicationContextAware {
 
     public static List<DHT> listParameter = new ArrayList<>();
 
-    public static GpioPinDigitalOutput pin;
+    public static GpioPinDigitalOutput pinO;
+    public static GpioPinDigitalOutput pinC;
 
     private ApplicationContext context;
 
@@ -120,21 +121,22 @@ public class LedController implements ApplicationContextAware {
     private void lightOff(boolean color) {
         if (color) {
             System.out.println("Зеленый\n");
-            if(pin == null) {
+            if(pinO == null) {
                 GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.HIGH);
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
+                pinO = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.HIGH);
+                pinC = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.LOW);
             }
 //            pin.toggle();
         } else {
             System.out.println("Красный\n");
-            if(pin == null) {
+            if(pinC == null) {
                 GpioController gpio = GpioFactory.getInstance();
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.HIGH);
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.LOW);
+                pinC = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.HIGH);
+                pinO = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
             }
         }
-        pin.toggle();
+        pinO.toggle();
+        pinC.toggle();
     }
 
 //    Опрос датчика - в параллели
