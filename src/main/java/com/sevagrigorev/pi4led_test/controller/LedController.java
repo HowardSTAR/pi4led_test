@@ -123,19 +123,18 @@ public class LedController implements ApplicationContextAware {
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
                 pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.HIGH);
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.LOW);
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
             }
-            pin.toggle();
+//            pin.toggle();
         } else {
             System.out.println("Красный\n");
             if(pin == null) {
                 GpioController gpio = GpioFactory.getInstance();
                 pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.HIGH);
-                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.LOW);
             }
-            pin.toggle();
         }
-
+        pin.toggle();
     }
 
 //    Опрос датчика - в параллели
