@@ -125,18 +125,17 @@ public class LedController implements ApplicationContextAware {
                 GpioController gpio = GpioFactory.getInstance();
                 pinO = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.HIGH);
                 pinC = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.LOW);
+                pinO.toggle();
             }
-//            pin.toggle();
         } else {
             System.out.println("Красный\n");
             if(pinC == null) {
                 GpioController gpio = GpioFactory.getInstance();
                 pinC = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.HIGH);
                 pinO = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
+                pinC.toggle();
             }
         }
-        pinO.toggle();
-        pinC.toggle();
     }
 
 //    Опрос датчика - в параллели
@@ -174,7 +173,6 @@ public class LedController implements ApplicationContextAware {
 
 //    Методы открытия и закрытия
     private void open() {
-        System.out.println("AutoOpen\n");
         try {
             Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
         } catch (IOException e) {
@@ -183,7 +181,6 @@ public class LedController implements ApplicationContextAware {
     }
 
     private void close() {
-        System.out.println("AutoCLose\n");
         try {
             Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
         } catch (IOException e) {
