@@ -51,7 +51,6 @@ document.write(day[d.getDay()]+" " +d.getDate()+ " " + month[d.getMonth()]
     <br>
     <input type="text" name="temper" placeholder="Ввод температуры "/>
     <input type="submit" value="Ввод авто-температуры"/>
-    <input type="checkbox" name="check_" value="true"/>
     <br>
     <p th:text="'Выставлена температура для автоматического открывания/закрывания: ' + ${auto} +' град.C'"></p>
 </form>

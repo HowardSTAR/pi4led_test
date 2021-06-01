@@ -28,8 +28,6 @@ public class LedController implements ApplicationContextAware {
 
     private ApplicationContext context;
 
-    private boolean isCheckAuto;
-
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
         this.context = ctx;
@@ -47,9 +45,7 @@ public class LedController implements ApplicationContextAware {
         try {
             model.addAttribute("temperature", getTemperatureNow());
             model.addAttribute("humidity", getHumidityNow());
-            if (isCheckAuto) {
                 model.addAttribute("auto", UtilAutoTemperature.getAutoTemperature());
-            }
             }catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,11 +53,7 @@ public class LedController implements ApplicationContextAware {
     }
 
     @PostMapping("/motor")
-    public String motor(@RequestParam String btn_, @RequestParam String check_, Model model) throws IOException {
-
-        System.out.println("Я ТУТУТУТУТУТУТУТУ    "+check_);
-
-        System.out.println(btn_);
+    public String motor(@RequestParam String btn_, Model model) throws IOException {
 
         if (btn_.equals("open")) {
 //            открытие в методе
@@ -77,9 +69,7 @@ public class LedController implements ApplicationContextAware {
         try {
             model.addAttribute("temperature", getTemperatureNow());
             model.addAttribute("humidity", getHumidityNow());
-            if (isCheckAuto) {
                 model.addAttribute("auto", UtilAutoTemperature.getAutoTemperature());
-            }
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -142,12 +132,12 @@ public class LedController implements ApplicationContextAware {
 
 //    Проверка для авто открывания/закрывания
     private void autoOpenClose(double temperature) {
-        if (isCheckAuto && UtilAutoTemperature.getAutoTemperature() != null && UtilAutoTemperature.getAutoTemperature() < temperature) {
+        if (UtilAutoTemperature.getAutoTemperature() != null && UtilAutoTemperature.getAutoTemperature() < temperature) {
                 open();
 //            светодиод
                 lightOff(true);
         }
-        if (!isCheckAuto && UtilAutoTemperature.getAutoTemperature() != null && UtilAutoTemperature.getAutoTemperature() > temperature){
+        if (UtilAutoTemperature.getAutoTemperature() != null && UtilAutoTemperature.getAutoTemperature() > temperature){
                 close();
 //            светодиод
                 lightOff(false);
