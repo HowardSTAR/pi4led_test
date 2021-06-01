@@ -4,6 +4,8 @@ import com.pi4j.io.gpio.*;
 
 import com.sevagrigorev.pi4led_test.UtilAutoTemperature;
 import com.sevagrigorev.pi4led_test.model.DHT;
+import com.sevagrigorev.pi4led_test.model.DHT11;
+import com.sevagrigorev.pi4led_test.model.DHTxx;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -31,25 +33,6 @@ public class LedController implements ApplicationContextAware {
         UtilAutoTemperature.setAutoTemperature(25);
     }
 
-//    убрать
-//    @RequestMapping("/")
-//    public String hello(){
-//        return "index";
-//    }
-
-    //    убрать
-//    @RequestMapping("/light")
-//    public String light() {
-//
-//        System.out.println("Горит светодиод");
-////        if(pin == null) {
-////            GpioController gpio = GpioFactory.getInstance();
-////            pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
-////        }
-////        pin.toggle();
-//
-//        return "ok";
-//    }
 
     @GetMapping("/motor")
     public String motor(Model model, @RequestParam(required = false) String temper) {
@@ -60,16 +43,10 @@ public class LedController implements ApplicationContextAware {
         }
         System.out.println("Util: "+ UtilAutoTemperature.getAutoTemperature());
 
-//        Датчик температур последний элумент listParameter
-//        DHT dht = getParameterFromDHL();    //  убрать
-
-//        DHTxx dht = getParameterFromDHL();    //  убрать
 
         try {
             model.addAttribute("temperature", getTemperatureNow());
             model.addAttribute("humidity", getHumidityNow());
-//            model.addAttribute("temperature", dht.getTemperature());
-//            model.addAttribute("humidity", dht.getHumidity());
             model.addAttribute("auto", UtilAutoTemperature.getAutoTemperature());
             }catch (Exception e) {
             e.printStackTrace();
@@ -98,9 +75,6 @@ public class LedController implements ApplicationContextAware {
             lightOff(false);
 //   убрать         Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
             }
-//          Датчик температур последний элемент listParameter методы
-//        DHT dht = getParameterFromDHL();        // убрать
-//        DHTxx dht = getParameterFromDHL();    // убрать
         try {
             model.addAttribute("temperature", getTemperatureNow());
             model.addAttribute("humidity", getHumidityNow());
@@ -121,31 +95,16 @@ public class LedController implements ApplicationContextAware {
     }
 
     //ОПРОС ДАТЧИКА ТЕМПЕРАТУРЫ
-    private DHT getParameterFromDHL(){  //  убрать
-
-//    private DHTxx getParameterFromDHL(){
-//            DHTxx dht11 = new DHT11(RaspiPin.GPIO_07);
-//            System.out.println("dht11 !!!");
-//            try {
-//                dht11.init();
-//        System.out.println(dht11.getData());
-
-//        можно цикл убрать, запрос датчика будем делать для ArrayList
-//                for (int i = 0; i < 10; i++) {
-//                    try {
-//                        System.out.println(dht11.getData());
-//                        Thread.sleep(DHT_WAIT_INTERVAL);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-
-//            } catch (Exception e1) {
-//                e1.printStackTrace();
-//            }
-//        return dht11;
-
-        return new DHT( Math.random()*30, Math.random()*90);     // убрать
+    private DHTxx getParameterFromDHL(){
+            DHTxx dht11 = new DHT11(RaspiPin.GPIO_07);
+            System.out.println("dht11 !!!");
+            try {
+                dht11.init();
+                System.out.println(dht11.getData());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        return dht11;
     }
 
 //    Светодиод
@@ -155,15 +114,22 @@ public class LedController implements ApplicationContextAware {
         System.out.println("Горит светодиод");
         if (color) {
             System.out.println("Зеленый");
+            if(pin == null) {
+                GpioController gpio = GpioFactory.getInstance();
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.HIGH);
+            }
+            pin.toggle();
         } else {
             System.out.println("Красный");
+            if(pin == null) {
+                GpioController gpio = GpioFactory.getInstance();
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "MyLED", PinState.LOW);
+                pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.HIGH);
+            }
+            pin.toggle();
         }
 
-//        if(pin == null) {
-//            GpioController gpio = GpioFactory.getInstance();
-//            pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_29, "MyLED", PinState.LOW);
-//        }
-//        pin.toggle();
     }
 
 //    Опрос датчика - в параллели
@@ -172,15 +138,14 @@ public class LedController implements ApplicationContextAware {
     public void create() {
         System.out.println("THREAD ");
         optimizeList();
-        listParameter.add(getParameterFromDHL());
-        autoOpenClose(getParameterFromDHL().getTemperature());
+        listParameter.add((DHT) getParameterFromDHL());
+        autoOpenClose(((DHT) getParameterFromDHL()).getTemperature());
         System.out.println("list: "+listParameter);
     }
 
 //    Проверка listParameter на 72 значения - 3 дня
     private void optimizeList() {
         if (listParameter.size() == 72) {
-//        if (listParameter.size() == 3) {
             listParameter.remove(0);
         }
     }
@@ -204,20 +169,20 @@ public class LedController implements ApplicationContextAware {
 //    Методы открытия и закрытия
     private void open() {
         System.out.println("AutoOpen");
-//        try {
-//            Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Open.py");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void close() {
         System.out.println("AutoCLose");
-//        try {
-//            Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Process pOpen = Runtime.getRuntime().exec("python src/main/python/com/sevagrigorev/pi4led_test/controller/Close.py");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private double getTemperatureNow() {
