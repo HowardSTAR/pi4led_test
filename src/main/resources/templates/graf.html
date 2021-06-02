@@ -38,9 +38,9 @@
 <div>
     <table border="1" id="htmlTable">
         <tr>
-            <th>Date</th>
-            <th>Temperature</th>
-            <th>Humidity</th>
+            <th>Дата</th>
+            <th>Температура</th>
+            <th>Влажность</th>
         </tr>
         <tr th:each ="dhl : ${dhlList}">
             <td th:utext="${dhl.getDate()}">...</td>
