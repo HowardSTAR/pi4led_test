@@ -38,9 +38,12 @@ document.write(day[d.getDay()]+" " +d.getDate()+ " " + month[d.getMonth()]
 <form action="#" data-th-action="@{/motor}" method="post">
     <button type="submit" name="btn_" value="open">ОТКРЫТЬ</button>
     <button type="submit" name="btn_" value="close">ЗАКРЫТЬ</button>
-<!--    <button type="submit" name="btn_" href="/graf">ГРАФИКИ</button>-->
     <a href="/graf">ГРАФИКИ</a>
+    <br>
+<!--    <p th:text="${op}"></p>-->
 </form>
+
+
 
 <form method="get">
     <p th:text="'Сейчас температура: ' + ${temperature}"></p>
@@ -49,7 +52,7 @@ document.write(day[d.getDay()]+" " +d.getDate()+ " " + month[d.getMonth()]
     <input type="text" name="temper" placeholder="Ввод температуры "/>
     <input type="submit" value="Включение авторежима"/>
     <br>
-    <p th:text="'Режим ' + ${auto}"></p>
+    <p th:text="'Режим ' + ${auto} + '     ' + ${op}" ref></p>
 </form>
 
 
